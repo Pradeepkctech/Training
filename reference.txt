@@ -1,0 +1,5 @@
+https://github.com/learning-zone/java-interview-questions
+https://github.com/Ebazhanov/linkedin-skill-assessments-quizzes/blob/master/java/java-quiz.md
+https://github.com/learning-zone/java-interview-questions/blob/master/java8-questions.md
+https://github.com/learning-zone/java-interview-questions/blob/master/java-multiple-choice-questions-answers.md
+https://github.com/learning-zone/java-interview-questions/blob/master/collections-questions.md
