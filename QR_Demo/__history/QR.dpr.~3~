@@ -1,0 +1,18 @@
+  program QR;
+
+uses
+  Vcl.Forms,
+  Or_u in 'Or_u.pas' {frmQRGen},
+  Vcl.Themes,
+  Vcl.Styles,
+  DelphiZXIngQRCode in 'Source\DelphiZXIngQRCode.pas';
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Sapphire Kamri');
+  AApplication.CreateForm(TfrmQRGen, frmQRGen);
+  pplication.Run;
+end.

@@ -1,0 +1,258 @@
+unit Or_u;
+
+// Demo app for ZXing QRCode port to Delphi, by Debenu Pty Ltd (www.debenu.com)
+// Need a PDF SDK? Checkout Debenu Quick PDF Library: http://www.debenu.com/products/development/debenu-pdf-library/
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, DelphiZXingQRCode, Vcl.ExtCtrls,
+  Vcl.StdCtrls, Vcl.ExtDlgs, Vcl.ComCtrls;
+
+type
+  TfrmQRGen = class(TForm)
+    cmbEncoding: TComboBox;
+    lblEncoding: TLabel;
+    edtQuietZone: TEdit;
+    lblPreview: TLabel;
+    PaintBox1: TPaintBox;
+    btnSave: TButton;
+    pnlQR: TPanel;
+    pnlProperties: TPanel;
+    pgcInput: TPageControl;
+    tabText: TTabSheet;
+    edtText: TEdit;
+    btnTextGenerate: TButton;
+    Phone: TTabSheet;
+    edtContact: TEdit;
+    btnGeneratePhone: TButton;
+    Email: TTabSheet;
+    btnGenerateEmail: TButton;
+    edtEmail: TEdit;
+    SMS: TTabSheet;
+    edtSMS: TEdit;
+    lblQuietZone: TLabel;
+    btnGenerateSMS: TButton;
+    SavePictureDialog1: TSavePictureDialog;
+    lblKCTech: TLabel;
+    procedure FormDestroy(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure PaintBox1Paint(Sender: TObject);
+    procedure edtTextChange(Sender: TObject);
+    procedure cmbEncodingChange(Sender: TObject);
+    procedure edtQuietZoneChange(Sender: TObject);
+    procedure btnSaveClick(Sender: TObject);
+
+    procedure btnTextGenerateClick(Sender: TObject);
+    procedure btnGeneratePhoneClick(Sender: TObject);
+    procedure btnGenerateEmailClick(Sender: TObject);
+    procedure lblPreviewClick(Sender: TObject);
+  //  procedure FormShow(Sender: TObject);
+
+
+
+
+  private
+    QRCodeBitmap: TBitmap;
+  public
+   // procedure Update;
+  end;
+
+var
+  frmQRGen: TfrmQRGen;
+
+implementation
+
+{$R *.dfm}
+
+
+
+procedure TfrmQRGen.btnGeneratePhoneClick(Sender: TObject);
+var
+  QRCode: TDelphiZXingQRCode;
+  Row, Column: Integer;
+begin
+  cmbEncoding.Enabled:=false;
+  QRCode := TDelphiZXingQRCode.Create;
+
+
+  try
+    QRCode.Data := edtContact.Text;
+    QRCode.Encoding := TQRCodeEncoding.qrNumeric;
+    QRCode.QuietZone := StrToIntDef(edtQuietZone.Text, 4);
+    QRCodeBitmap.SetSize(QRCode.Rows, QRCode.Columns);
+    for Row := 0 to QRCode.Rows - 1 do
+    begin
+      for Column := 0 to QRCode.Columns - 1 do
+      begin
+        if (QRCode.IsBlack[Row, Column]) then
+        begin
+          QRCodeBitmap.Canvas.Pixels[Column, Row] := clBlack;
+        end
+        else
+        begin
+          QRCodeBitmap.Canvas.Pixels[Column, Row] := clWhite;
+        end;
+      end;
+    end;
+  finally
+    QRCode.Free;
+
+
+  end;
+  PaintBox1.Repaint;
+
+end;
+
+procedure TfrmQRGen.btnGenerateEmailClick(Sender: TObject);
+var
+  QRCode: TDelphiZXingQRCode;
+  Row, Column: Integer;
+begin
+  cmbEncoding.Enabled:=true;
+  QRCode := TDelphiZXingQRCode.Create;
+  try
+    QRCode.Data := edtEmail.Text;
+    QRCode.Encoding := TQRCodeEncoding(cmbEncoding.ItemIndex);
+    QRCode.QuietZone := StrToIntDef(edtQuietZone.Text, 4);
+    QRCodeBitmap.SetSize(QRCode.Rows, QRCode.Columns);
+    for Row := 0 to QRCode.Rows - 1 do
+    begin
+      for Column := 0 to QRCode.Columns - 1 do
+      begin
+        if (QRCode.IsBlack[Row, Column]) then
+        begin
+          QRCodeBitmap.Canvas.Pixels[Column, Row] := clBlack;
+        end
+        else
+        begin
+          QRCodeBitmap.Canvas.Pixels[Column, Row] := clWhite;
+        end;
+      end;
+    end;
+  finally
+    QRCode.Free;
+  end;
+  PaintBox1.Repaint;
+end;
+
+procedure TfrmQRGen.btnSaveClick(Sender: TObject);
+begin
+  if SavePictureDialog1.Execute then
+   QRCodeBitmap.SaveToFile(SavePictureDialog1.FileName);
+end;
+
+procedure TfrmQRGen.btnTextGenerateClick(Sender: TObject);
+var
+  QRCode: TDelphiZXingQRCode;
+  Row, Column: Integer;
+begin
+  cmbEncoding.Enabled:=true;
+  QRCode := TDelphiZXingQRCode.Create;
+  try
+
+
+    QRCode.Data := edtText.Text ;
+    QRCode.Encoding := TQRCodeEncoding(cmbEncoding.ItemIndex);
+    QRCode.QuietZone := StrToIntDef(edtQuietZone.Text, 4);
+    QRCodeBitmap.SetSize(QRCode.Rows, QRCode.Columns);
+    for Row := 0 to QRCode.Rows - 1 do
+    begin
+      for Column := 0 to QRCode.Columns - 1 do
+      begin
+        if (QRCode.IsBlack[Row, Column]) then
+        begin
+          QRCodeBitmap.Canvas.Pixels[Column, Row] := clBlack;
+        end
+        else
+        begin
+          QRCodeBitmap.Canvas.Pixels[Column, Row] := clWhite;
+        end;
+      end;
+    end;
+  finally
+    QRCode.Free;
+  end;
+  PaintBox1.Repaint;
+end;
+
+procedure TfrmQRGen.cmbEncodingChange(Sender: TObject);
+begin
+  Update;
+end;
+
+
+procedure TfrmQRGen.edtQuietZoneChange(Sender: TObject);
+begin
+  Update;
+end;
+
+procedure TfrmQRGen.edtTextChange(Sender: TObject);
+begin
+  Update;
+end;
+
+procedure TfrmQRGen.FormCreate(Sender: TObject);
+begin
+  edtText.StyleElements:=[seBorder];
+   pnlProperties.StyleElements:=[seBorder];
+   pgcInput.StyleElements:=[seBorder];
+   lblPreview.StyleElements:= [seBorder];
+   PaintBox1.StyleElements:= [seBorder];
+   cmbEncoding.StyleElements:= [seBorder];
+   edtQuietZone.StyleElements:= [seBorder];
+   QRCodeBitmap := TBitmap.Create;
+  pnlQR.StyleElements:= [seBorder];
+  lblKCTech.StyleElements:= [seBorder];
+
+
+  Update;
+end;
+
+procedure TfrmQRGen.FormDestroy(Sender: TObject);
+begin
+  QRCodeBitmap.Free;
+end;
+
+procedure TfrmQRGen.lblPreviewClick(Sender: TObject);
+begin
+
+end;
+
+//procedure TForm1.FormShow(Sender: TObject);
+//begin
+// self.WindowState := wsMaximized;
+//end;
+
+procedure TfrmQRGen.PaintBox1Paint(Sender: TObject);
+var
+  Scale: Double;
+begin
+  PaintBox1.Canvas.Brush.Color := clWhite;
+  PaintBox1.Canvas.FillRect(Rect(0, 0, PaintBox1.Width, PaintBox1.Height));
+  if ((QRCodeBitmap.Width > 0) and (QRCodeBitmap.Height > 0)) then
+  begin
+    if (PaintBox1.Width < PaintBox1.Height) then
+    begin
+      Scale := PaintBox1.Width / QRCodeBitmap.Width;
+    end
+    else
+    begin
+      Scale := PaintBox1.Height / QRCodeBitmap.Height;
+    end;
+    PaintBox1.Canvas.StretchDraw(Rect(0, 0, Trunc(Scale * QRCodeBitmap.Width),
+      Trunc(Scale * QRCodeBitmap.Height)), QRCodeBitmap);
+  end;
+end;
+
+
+
+
+
+
+
+
+
+end.

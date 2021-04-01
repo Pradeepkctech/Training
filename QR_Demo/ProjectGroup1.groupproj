@@ -1,0 +1,36 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{8B1DB53F-9CC7-4FDF-B9B4-D3E0202BFF73}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="QR.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="QR">
+        <MSBuild Projects="QR.dproj"/>
+    </Target>
+    <Target Name="QR:Clean">
+        <MSBuild Projects="QR.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="QR:Make">
+        <MSBuild Projects="QR.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="QR"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="QR:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="QR:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

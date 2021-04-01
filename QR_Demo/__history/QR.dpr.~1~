@@ -1,0 +1,17 @@
+  program QR;
+
+uses
+  Vcl.Forms,
+  Or_u in 'Or_u.pas' {Form1},
+  Vcl.Themes,
+  Vcl.Styles;
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Sapphire Kamri');
+  AApplication.CreateForm(TForm1, Form1);
+  pplication.Run;
+end.
